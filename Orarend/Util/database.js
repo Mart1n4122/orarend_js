@@ -34,7 +34,7 @@ export function dbRun(sql, params = []) {
 
 export async function initializeDatabase() {
     await dbRun('DROP TABLE IF EXISTS timetable');
-    await db.run('CREATE TABLE IF NOT EXISTS timetable (id INTEGER PRIMARY KEY AUTOINCREMENT, day STRING, classNumber INTEGER, className STRING)');
+    await dbRun('CREATE TABLE IF NOT EXISTS timetable (id INTEGER PRIMARY KEY AUTOINCREMENT, day STRING, classNumber INTEGER, className STRING)');
     const days = [
       {
         day: 'Hétfő',
