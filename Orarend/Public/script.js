@@ -9,10 +9,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   
     async function fetchTimetable() {
       try {
-        const response = await fetch('/classes');
+        const response = await fetch('http://localhost:3000/classes');
         if (response.ok) {
           timetableData = await response.json();
-          renderTable();
+          if (!timetable) {
+            console.error('A timetable elem nem található az oldalon.');
+            return;
+          }
+          else{
+            renderTable(response);
+          }
+
         } else {
           console.error('Failed to fetch timetable:', await response.json());
         }
@@ -21,8 +28,47 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
   
+    document.addEventListener('DOMContentLoaded', () => {
+      const timetableTableBody = document.querySelector('#timetable-table tbody');
+      fetch('http://localhost:3000/classes')
+        .then(response => response.json())
+        .then(data => {
+          data.forEach(entry => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${entry.day}</td>
+              <td>${entry.classNumber}</td>
+              <td>${entry.className}</td>
+            `;
+            timetableTableBody.appendChild(row);
+          });
+        })
+        .catch(error => {
+          console.error('Hiba az órarend betöltésekor:', error);
+        });
+    });
+
+    function populateTimetable(data) {
+      const timetableTableBody = document.querySelector('#timetable-table tbody');
+      timetableTableBody.innerHTML = '';
+    
+      data.forEach(entry => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${entry.day}</td>
+          <td>${entry.classNumber}</td>
+          <td>${entry.className}</td>
+        `;
+        timetableTableBody.appendChild(row);
+      });
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      populateTimetable(timetableData);
+    });
+
     function renderTable() {
-      const maxClassNumber = Math.max(8, ...timetableData.map(c => c.classNumber));
+      const maxClassNumber = Math.max(12, ...timetableData.map(c => c.classNumber));
       timetable.innerHTML = `
         <table>
           <thead>

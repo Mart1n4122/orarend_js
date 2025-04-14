@@ -2,9 +2,11 @@ import express, { json } from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { dbAll, initializeDatabase, dbGet, dbRun } from './Util/database.js';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +19,7 @@ app.use((err, req, res, next) => {
 
 app.get('/classes', async (_, res) => {
     const classes = await dbAll('SELECT * FROM timetable');
+    console.log(classes)
     res.status(200).json(classes);
 });
 
