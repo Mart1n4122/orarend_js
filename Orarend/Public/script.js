@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const timetable = document.getElementById('timetable');
   const addForm = document.getElementById('add-form');
+  const API_BASE_URL = 'http://localhost:3000';
   const editForm = document.getElementById('edit-form');
   const editContainer = document.getElementById('edit-container');
   const cancelEditButton = document.getElementById('cancel-edit');
   const daysOfWeek = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek'];
+
   let timetableData = [];
 
   async function fetchTimetable() {
@@ -12,9 +14,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       const response = await fetch('http://localhost:3000/classes');
       if (response.ok) {
         const data = await response.json();
-        console.log("Timetable data:", data);  // Ellenőrizd, hogy milyen adatokat kapsz
-        timetableData = data;  // Globálisan tárold az adatokat
-        renderTable(timetableData);  // Rendereld a táblázatot
+        console.log("Timetable data:", data);
+        timetableData = data;
+        renderTable(timetableData);
       } else {
         console.error('Failed to fetch timetable:', await response.json());
       }
@@ -83,9 +85,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   addForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const newClass = Object.fromEntries(new FormData(addForm));
-    await sendRequest('/class', 'POST', newClass);
+    await sendRequest(`${API_BASE_URL}/class`, 'POST', newClass);
     addForm.reset();
-    await fetchTimetable(); // Frissítés
+    await fetchTimetable(); 
   });
 
   function openEditForm(id) {
@@ -101,15 +103,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   editForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const updatedClass = Object.fromEntries(new FormData(editForm));
-    await sendRequest(`/class/${updatedClass.id}`, 'PUT', updatedClass);
+    await sendRequest(`${API_BASE_URL}/class/${updatedClass.id}`, 'PUT', updatedClass);
     editForm.reset();
     editContainer.classList.add('hidden');
-    await fetchTimetable(); // Frissítés
+    await fetchTimetable();
   });
 
   async function deleteClass(id) {
-    await sendRequest(`/timetable/${id}`, 'DELETE');
-    await fetchTimetable(); // Frissítés
+    await sendRequest(`${API_BASE_URL}/class/${id}`, 'DELETE');
+    await fetchTimetable();
   }
 
   async function sendRequest(url, method, body = null) {
@@ -120,7 +122,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         body: body ? JSON.stringify(body) : null,
       };
       const response = await fetch(url, options);
-      if (!response.ok) console.error(`Failed to ${method} data:`, await response.json());
+      if (!response.ok) {
+        const text = await response.text();
+        console.error(`Failed to ${method} data:`, text);
+      }
     } catch (error) {
       console.error(`Failed to ${method} data:`, error);
     }
@@ -131,6 +136,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     editContainer.classList.add('hidden');
   });
 
-  await fetchTimetable(); // Az első adatbetöltés
-
+  await fetchTimetable();
 });

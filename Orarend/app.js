@@ -73,14 +73,15 @@ app.put('/class/:id', async (req, res) => {
     console.log('Server response:', responseData);
 });
 
-app.delete('/timetable/:id', async (req, res) => {
+app.delete('/class/:id', async (req, res) => {
     const id = req.params.id;
     const user = await dbGet('SELECT * FROM timetable WHERE id = ?', [id]);
     if(!user)
         return res.status(404).json({message: 'User not found'});
     await dbRun('DELETE FROM timetable WHERE id = ?', [id]);
     res.status(200).json({message: 'User deleted'});
-});
+  });
+  
 
 async function startServer() {
     await initializeDatabase();
