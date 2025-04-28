@@ -8,21 +8,6 @@
 <body>
   <div class="container">
     <h1>Órarend</h1>
-    <div id="timetable">
-      <table>
-      <thead>
-        <tr>
-          <th>Nap</th>
-          <th>Óraszám</th>
-          <th>Tantárgy</th>
-        </tr>
-      </thead>
-      <tbody>
-
-      </tbody>
-    </table>
-    </div>
-
     <h2>Új óra hozzáadása</h2>
     <form id="add-form">
       <select name="day" required>
@@ -37,7 +22,6 @@
       <input type="text" name="className" placeholder="Tantárgy" required>
       <button type="submit">Hozzáadás</button>
     </form>
-
     <div id="edit-container" class="hidden">
       <h2>Óra szerkesztése</h2>
       <form id="edit-form">
@@ -56,6 +40,20 @@
       </form>
     </div>
   </div>
+    <div id="timetable">
+      <table>
+      <thead>
+        <tr>
+          <th>Nap</th>
+          <th>Óraszám</th>
+          <th>Tantárgy</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
+    </div>
 
   <script src="script.js"></script>
 </body>
